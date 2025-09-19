@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { FiPlus, FiTrash2, FiEdit, FiSave } from "react-icons/fi";
-import "./App.css";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { FiPlus, FiTrash2, FiEdit, FiSave } from 'react-icons/fi';
+import './App.css';
 
 const API_BASE = "https://to-do-list-mern-2hci.onrender.com";
 
@@ -11,82 +11,85 @@ function App() {
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [editingTodoText, setEditingTodoText] = useState("");
   const [filter, setFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getTodos();
   }, []);
 
   const getTodos = () => {
-    axios
-      .get(API_BASE + "/todos")
-      .then((res) => setTodos(res.data))
-      .catch((err) => console.error("Error fetching todos: ", err));
-  };
+    setLoading(true);
+    axios.get(API_BASE + '/todos')
+      .then(res => {
+        setTodos(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching todos: ", err);
+        setLoading(false);
+      });
+  }
 
   const addTodo = (e) => {
     e.preventDefault();
     if (!newTodo.trim()) return;
 
-    axios
-      .post(API_BASE + "/todos/add", { description: newTodo })
-      .then((res) => {
+    axios.post(API_BASE + '/todos/add', { description: newTodo })
+      .then(res => {
         console.log(res.data);
         getTodos(); // Refresh list
         setNewTodo("");
       })
-      .catch((err) => console.error("Error adding todo: ", err));
-  };
+      .catch(err => console.error("Error adding todo: ", err));
+  }
 
   const deleteTodo = (id) => {
-    axios
-      .delete(API_BASE + "/todos/" + id)
-      .then((res) => {
+    axios.delete(API_BASE + '/todos/' + id)
+      .then(res => {
         console.log(res.data);
         getTodos(); // Refresh list
       })
-      .catch((err) => console.error("Error deleting todo: ", err));
-  };
+      .catch(err => console.error("Error deleting todo: ", err));
+  }
 
   const toggleCompleted = (id) => {
-    const todoToUpdate = todos.find((todo) => todo._id === id);
+    const todoToUpdate = todos.find(todo => todo._id === id);
     if (!todoToUpdate) return;
 
-    axios
-      .post(API_BASE + "/todos/update/" + id, {
+    axios.post(API_BASE + '/todos/update/' + id, { 
         description: todoToUpdate.description,
-        completed: !todoToUpdate.completed,
+        completed: !todoToUpdate.completed 
       })
-      .then((res) => {
+      .then(res => {
         console.log(res.data);
         getTodos(); // Refresh list
       })
-      .catch((err) => console.error("Error updating todo: ", err));
-  };
+      .catch(err => console.error("Error updating todo: ", err));
+  }
 
   const handleEditClick = (todo) => {
     setEditingTodoId(todo._id);
     setEditingTodoText(todo.description);
-  };
+  }
 
   const handleSaveClick = (id) => {
-    const todoToUpdate = todos.find((todo) => todo._id === id);
+    const todoToUpdate = todos.find(todo => todo._id === id);
     if (!todoToUpdate) return;
 
-    axios
-      .post(API_BASE + "/todos/update/" + id, {
+    axios.post(API_BASE + '/todos/update/' + id, { 
         description: editingTodoText,
-        completed: todoToUpdate.completed,
+        completed: todoToUpdate.completed
       })
-      .then((res) => {
+      .then(res => {
         console.log(res.data);
         setEditingTodoId(null);
         setEditingTodoText("");
         getTodos(); // Refresh list
       })
-      .catch((err) => console.error("Error updating todo: ", err));
-  };
+      .catch(err => console.error("Error updating todo: ", err));
+  }
 
-  const filteredTodos = todos.filter((todo) => {
+  const filteredTodos = todos.filter(todo => {
     if (filter === "all") return true;
     if (filter === "active") return !todo.completed;
     if (filter === "completed") return todo.completed;
@@ -100,91 +103,57 @@ function App() {
       </div>
 
       <form className="form" onSubmit={addTodo}>
-        <input
-          type="text"
-          placeholder="Add a new task..."
-          onChange={(e) => setNewTodo(e.target.value)}
+        <input 
+          type="text" 
+          placeholder="Add a new task..." 
+          onChange={e => setNewTodo(e.target.value)}
           value={newTodo}
         />
         <button type="submit">Add Task</button>
       </form>
 
       <div className="filters">
-        <button
-          className={filter === "all" ? "active" : ""}
-          onClick={() => setFilter("all")}
-        >
-          All
-        </button>
-        <button
-          className={filter === "active" ? "active" : ""}
-          onClick={() => setFilter("active")}
-        >
-          Active
-        </button>
-        <button
-          className={filter === "completed" ? "active" : ""}
-          onClick={() => setFilter("completed")}
-        >
-          Completed
-        </button>
+        <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All</button>
+        <button className={filter === 'active' ? 'active' : ''} onClick={() => setFilter('active')}>Active</button>
+        <button className={filter === 'completed' ? 'active' : ''} onClick={() => setFilter('completed')}>Completed</button>
       </div>
 
       <div className="todo-list">
-        {filteredTodos.length > 0 ? (
-          filteredTodos.map((todo) => (
-            <div
-              className={`todo-item ${todo.completed ? "completed" : ""}`}
-              key={todo._id}
-            >
+        {loading ? (
+          <div className="loading-spinner"></div>
+        ) : filteredTodos.length > 0 ? filteredTodos.map(todo => (
+          <div className={`todo-item ${todo.completed ? "completed" : ""}`} key={todo._id}>
+            {editingTodoId === todo._id ? (
+              <input 
+                type="text"
+                className="edit-input"
+                value={editingTodoText}
+                onChange={(e) => setEditingTodoText(e.target.value)}
+              />
+            ) : (
+              <span className="todo-item-text" onClick={() => toggleCompleted(todo._id)}>
+                {todo.description}
+              </span>
+            )}
+            <div className="buttons-wrapper">
               {editingTodoId === todo._id ? (
-                <input
-                  type="text"
-                  className="edit-input"
-                  value={editingTodoText}
-                  onChange={(e) => setEditingTodoText(e.target.value)}
-                />
+                <button className="icon-btn save-btn" onClick={() => handleSaveClick(todo._id)}><FiSave /></button>
               ) : (
-                <span
-                  className="todo-item-text"
-                  onClick={() => toggleCompleted(todo._id)}
-                >
-                  {todo.description}
-                </span>
+                <button className="icon-btn edit-btn" onClick={() => handleEditClick(todo)}><FiEdit /></button>
               )}
-              <div className="buttons-wrapper">
-                {editingTodoId === todo._id ? (
-                  <button
-                    className="icon-btn save-btn"
-                    onClick={() => handleSaveClick(todo._id)}
-                  >
-                    <FiSave />
-                  </button>
-                ) : (
-                  <button
-                    className="icon-btn edit-btn"
-                    onClick={() => handleEditClick(todo)}
-                  >
-                    <FiEdit />
-                  </button>
-                )}
-                <button
-                  className="icon-btn delete-btn"
-                  onClick={() => deleteTodo(todo._id)}
-                >
-                  <FiTrash2 />
-                </button>
-              </div>
+              <button className="icon-btn delete-btn" onClick={() => deleteTodo(todo._id)}>
+                <FiTrash2 />
+              </button>
             </div>
-          ))
-        ) : (
+          </div>
+        )) : (
           <div className="empty-state">
             <p>No tasks for this filter.</p>
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }
 
 export default App;

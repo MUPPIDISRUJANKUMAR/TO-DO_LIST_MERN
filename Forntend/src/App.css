@@ -141,7 +141,25 @@ body {
   max-height: 280px; /* Adjusted height */
   overflow-y: auto;
   padding-right: 10px; /* For scrollbar */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center spinner */
 }
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto; /* Center spinner */
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 
 /* Custom Scrollbar */
 .todo-list::-webkit-scrollbar {
@@ -176,6 +194,7 @@ body {
   transition: all 0.3s ease;
   gap: 1rem;
   animation: fadeIn 0.5s ease;
+  width: 100%; /* Ensure todo items take full width */
 }
 
 @keyframes fadeIn {
