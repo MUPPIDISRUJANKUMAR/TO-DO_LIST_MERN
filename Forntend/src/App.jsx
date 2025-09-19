@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FiPlus, FiTrash2, FiEdit, FiSave } from 'react-icons/fi';
 import './App.css';
 
 const API_BASE = "https://to-do-list-mern-2hci.onrender.com";
@@ -9,6 +10,7 @@ function App() {
   const [newTodo, setNewTodo] = useState("");
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [editingTodoText, setEditingTodoText] = useState("");
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     getTodos();
@@ -79,10 +81,17 @@ function App() {
       .catch(err => console.error("Error updating todo: ", err));
   }
 
+  const filteredTodos = todos.filter(todo => {
+    if (filter === "all") return true;
+    if (filter === "active") return !todo.completed;
+    if (filter === "completed") return todo.completed;
+    return true;
+  });
+
   return (
     <div className="app">
       <div className="header">
-        <h1>My To-Do List</h1>
+        <h1>Glossy To-Do</h1>
       </div>
 
       <form className="form" onSubmit={addTodo}>
@@ -95,8 +104,14 @@ function App() {
         <button type="submit">Add Task</button>
       </form>
 
+      <div className="filters">
+        <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All</button>
+        <button className={filter === 'active' ? 'active' : ''} onClick={() => setFilter('active')}>Active</button>
+        <button className={filter === 'completed' ? 'active' : ''} onClick={() => setFilter('completed')}>Completed</button>
+      </div>
+
       <div className="todo-list">
-        {todos.length > 0 ? todos.map(todo => (
+        {filteredTodos.length > 0 ? filteredTodos.map(todo => (
           <div className={`todo-item ${todo.completed ? "completed" : ""}`} key={todo._id}>
             {editingTodoId === todo._id ? (
               <input 
@@ -112,18 +127,18 @@ function App() {
             )}
             <div className="buttons-wrapper">
               {editingTodoId === todo._id ? (
-                <button className="save-btn" onClick={() => handleSaveClick(todo._id)}>Save</button>
+                <button className="icon-btn save-btn" onClick={() => handleSaveClick(todo._id)}><FiSave /></button>
               ) : (
-                <button className="edit-btn" onClick={() => handleEditClick(todo)}>Edit</button>
+                <button className="icon-btn edit-btn" onClick={() => handleEditClick(todo)}><FiEdit /></button>
               )}
-              <button className="delete-btn" onClick={() => deleteTodo(todo._id)}>
-                &#x2715;
+              <button className="icon-btn delete-btn" onClick={() => deleteTodo(todo._id)}>
+                <FiTrash2 />
               </button>
             </div>
           </div>
         )) : (
           <div className="empty-state">
-            <p>No tasks yet. Add one to get started!</p>
+            <p>No tasks for this filter.</p>
           </div>
         )}
       </div>
