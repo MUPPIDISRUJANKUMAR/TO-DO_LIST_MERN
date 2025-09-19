@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+:root {
+  --primary-color: #6a5acd; /* SlateBlue */
+  --background-color: #f0f2f5;
+  --card-background: #ffffff;
+  --text-color: #333333;
+  --subtle-text-color: #888888;
+  --border-color: #e0e0e0;
+  --danger-color: #e53e3e;
+  --success-color: #38a169;
+  --edit-color: #3182ce;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+#root {
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 1rem;
+}
+
+.app {
+  background-color: var(--card-background);
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.form input {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.2);
+}
+
+.form button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.form button:hover {
+  background-color: #5a4acd;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--subtle-text-color);
+  padding: 2rem;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: box-shadow 0.2s ease;
+  gap: 0.5rem;
+}
+
+.todo-item:hover {
+   box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+}
+
+.todo-item-text {
+  color: var(--text-color);
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+.edit-input {
+  flex-grow: 1;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.todo-item.completed .todo-item-text {
+  text-decoration: line-through;
+  color: var(--subtle-text-color);
+}
+
+.buttons-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-btn, .save-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.edit-btn {
+  background-color: transparent;
+  color: var(--edit-color);
+}
+
+.edit-btn:hover {
+  background-color: #ebf8ff;
+  border-color: #90cdf4;
+}
+
+.save-btn {
+  background-color: var(--success-color);
+  color: white;
+  border-color: var(--success-color);
+}
+
+.save-btn:hover {
+  background-color: #2f855a;
+}
+
+.delete-btn {
+  background-color: transparent;
+  color: var(--danger-color);
+  border: none;
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: #fef2f2;
+}
